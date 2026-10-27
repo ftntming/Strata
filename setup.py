@@ -6747,7 +6747,11 @@ def _start(cfg_path: Path, port: int | None, gpu: int | list | None = None, open
     """keep: settings given on this start that the model keeps from now on (--host, --api-key, --draft-vocab,
     --vram-reserve-mib)."""
     cfg = upgrade_config(cfg_path, json.loads(cfg_path.read_text(encoding="utf-8-sig")))
-    missing = [p for p in [cfg["exe"], *[a for a in cfg["args"] if a.endswith(".gguf")]] if not Path(p).exists()]
+    from strata_control import engine_component
+    # Managed engines are resolved and verified by the server when it starts.
+    paths = ([] if engine_component.is_reference(cfg["exe"]) else [cfg["exe"]])
+    paths += [a for a in cfg["args"] if a.endswith(".gguf")]
+    missing = [p for p in paths if not Path(p).exists()]
     if missing:
         fail(f"{cfg_path.name} refers to missing files: {missing[0]}", "run it again with --setup to repair")
     keep = {k: v for k, v in (keep or {}).items() if v is not None}

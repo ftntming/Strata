@@ -238,6 +238,11 @@ class NoBrowser(unittest.TestCase):
         self.assertIn("--open", cmd)
         self.assertIs(saved["open_browser"], True)
 
+    def test_start_with_managed_engine(self):
+        cmd, _, saved = self.start_cmd({"exe": "component:strata-engine"})
+        self.assertIn("--config", cmd)
+        self.assertEqual(saved["exe"], "component:strata-engine")
+
 
 class VisionTokens(unittest.TestCase):
     """#625: --vision-tokens N sets the config's vision.max_tokens (the most image tokens a picture becomes); a setup
