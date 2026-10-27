@@ -202,6 +202,8 @@ foreground script while that background server is running.
 
 ## Configuration and troubleshooting
 
+- **`ECONNREFUSED` during startup:** wait for the server to print `ready`. The
+  API may not listen on port 8080 until the model has loaded.
 - **Port 8080 is already in use:** stop the existing server first. Opening a new
   terminal does not stop a managed background server.
 - **Authentication required:** use the API key from the selected configuration.
@@ -217,7 +219,9 @@ foreground script while that background server is running.
 
 All four launchers explicitly bind to `0.0.0.0`, and their saved configurations
 require the same API key. OpenCode uses `http://192.168.2.202:8080/v1` for this
-PC. Its `apiKey` is a file reference,
+PC. Its main and small-model defaults both select
+`strata/orcarouter-qwen3.8-flash-next-uncensored-q4_k_s`, matching the active
+server. Change these selections when serving a different model. Its `apiKey` is a file reference,
 `{file:~/.config/opencode/strata-api-key}`, using
 [OpenCode's file substitution](https://docs.opencode.ai/docs/config/#files).
 The private key file is outside the repository and readable only by its owner.
